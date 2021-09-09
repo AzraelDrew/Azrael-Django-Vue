@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/css/myStyle.css" />
+  <title>{{ siteinfo.title }}</title>
+</head>
+
+<body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
+  <div id="home">
+    <div>
+      <div class="header">
+        <h1>{{ siteinfo.title }}</h1>
+        <img src="/{{ siteinfo.logo}}" alt="" />
+      </div>
+      <hr />
+      <div class="content">
+        <div class="menu">
+          <div class="item" v-for="item in classes" v-if="item.id ===choosed" style="background:#777;color:#fff">
+            <a>[[item.text]]</a>
+          </div>
+          <div class="item" v-else @click="chooseClass(item.id)">
+            <a>[[item.text]]</a>
+          </div>
+        </div>
+        <div class="userlist" v-if="item.id ===choosed" v-for="item in classes">
+          <p>
+            [[item.text]]
+          </p>
+          <hr />
+          <div v-if="item.userlist.length>0" class="user" v-for="user in item.userlist">
+            <img :src="'/'+user.headImg" alt="" />
+            <p>[[user.nickName]]</p>
+          </div>
+          <p v-else>没有用户</p>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <input v-model="inputText" type="text" style="height:30px;width:690px;">
+    <p>
+      [[inputText]]
+    </p>
+    <div class=" foot">
+      Cpoyright @ 2021 Azrael
+      <button @click="onOffClick()">开关</button>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      delimiters: ['[[', ']]'], //更改双大括号语法
+      el: '#home',
+      data() {
+        return {
+          choosed: 1,
+          classes: [],
+          onOff: false,
+          inputText: ""
+        };
+      },
+      mounted() {
+        this.getData();
+      },
+      methods: {
+        getData() {
+          axios({
+            url: 'http://localhost:8000/api/',
+            type: 'json',
+            method: 'get',
+          }).then(res => {
+            this.classes = res.data.classes;
+          });
+        },
+        onOffClick() {
+          this.onOff = !this.onOff
+        },
+        chooseClass(id) {
+          this.choosed = id
+        }
+      },
+    });
+  </script>
+</body>
+
+</html>
