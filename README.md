@@ -24,7 +24,7 @@ sudo service nginx stop
 
 sudo service nginx restart
 
-如果安装来apache页面会变为apache的页面
+如果安装了apache页面会变为apache的页面
 
 ```
 
@@ -33,5 +33,3 @@ sudo service nginx restart
 ```shell
 sudo vim /etc/nginx/sites-available/default
 ```
-
-/home/azrael/Code/Azrael-Django-Vue/WYYUN
