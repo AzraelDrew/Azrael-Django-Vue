@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password,make_password
-from myblog.models import Classes, UserInfo
+from myblog.models import Classes, UserInfo ,SiteInfo
 from myblog.toJson import Classes_data, UserInfo_data
 import json
 
@@ -48,16 +48,24 @@ def api_test(request):
 @api_view(['GET', 'POST'])    
 def getMenuList(request):
     allClasses = Classes.objects.all()
-
+    siteinfo = SiteInfo.objects.get(id=1)
+    siteinfo_data={
+    "sitename":siteinfo.title,
+    "logo":"http://localhost:8000/"+str(siteinfo.logo)
+    }
     # 整理数据为json
-    data=[]
+    menu_data=[]
     for c in allClasses:
         # 设计单条数据的结构
         data_item={
         "id":c.id,
         "text":c.text
         }
-        data.append(data_item)
+        menu_data.append(data_item)
+    data={
+    "menu_data":menu_data,
+    "siteinfo":siteinfo_data,
+    }
     return Response(data)
 
 @api_view(["GET","POST"])   
@@ -131,3 +139,24 @@ def toRegister(request):
         newUser = User(username=username,password=newPwd)
         newUser.save()
     return Response("ok")
+
+@api_view(["POST","PUT"])
+def uploadLogo(request):
+    if request.method == "PUT":
+        sitename = request.POST["sitename"]
+        print(sitename)
+        old_info = SiteInfo.objects.get(id=1)
+        old_info.title = sitename
+        new_info = SiteInfo.objects.get(id=2)
+        old_info.logo = new_info.logo
+        old_info.save()
+        return Response("OK")
+    img = request.FILES['logo']
+    print(img)
+    test_siteLogo = SiteInfo.objects.get(id=2)
+    test_siteLogo.logo = img
+    test_siteLogo.save()
+    data={
+    "img":str(test_siteLogo.logo)
+    }
+    return Response(data)

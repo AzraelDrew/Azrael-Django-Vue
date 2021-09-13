@@ -3,13 +3,14 @@
     <!-- .self只对自身启用,不会影响子节点(子节点的事件不会冒泡到当前标签)  -->
     <div v-on:keydown.enter="toLogin" id="loginbox">
       <div class="from">
-        <div class="item">
+        <div v-if="target===1||target===2" class="item">
           <div class="span">
             用户名:
           </div>
           <input v-model="username" type="text" name="" id="" placeholder="请输入用户名">
         </div>
-        <div class="item">
+
+        <div v-if="target===1||target===2" class="item">
           <div class="span">
             密码:
           </div>
@@ -21,8 +22,24 @@
           </div>
           <input v-model="password2" type="text" name="" id="" placeholder="再次输入密码">
         </div>
+        <div v-if="target===3" class="item">
+          <div class="span">
+            网站名称:
+          </div>
+          <input v-model="sitename" type="text" name="" id="" placeholder="请输入网站名称">
+        </div>
+        <div v-if="target===3" class="item">
+          <div class="span">
+            图片上传:
+          </div>
+          <input type="file" id="uploadLogo" @change="uploadImg($event)" style="width:50px">
+        </div>
+        <div v-if="target===3" class="item">
+          <img :src="testLogo" alt="">
+        </div>
         <button v-if="target===1" v-on:click="toLogin">登录</button>
         <button v-if="target===2" v-on:click="toRegister">注册</button>
+        <button v-if="target===3" v-on:click="toUpload">确定</button>
       </div>
     </div>
   </div>
@@ -39,6 +56,8 @@
         username: "",
         password: "",
         password2: "",
+        sitename: "",
+        testLogo: ""
       }
     },
     methods: {
@@ -75,7 +94,9 @@
                 break;
               default:
                 console.log(res.data.token);
+                window.localStorage.setItem("token", res.data.token);
                 alert("登录成功")
+                window.location.reload();
             }
           })
         } else {
@@ -116,6 +137,49 @@
         } else {
           alert("缺少必填项")
         }
+      },
+      // 修改网站名称
+      toUpload() {
+        let sitename = this.sitename;
+        let logo = this.testLogo;
+        console.log(sitename);
+        if (sitename.length > 0 && logo.length > 0) {
+          axios({
+            url: "http://localhost:8000/upload-logo/",
+            method: "put",
+            data: Qs.stringify({
+              sitename,
+              logo,
+            }),
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }).then(res => {
+            console.log(res);
+            if (res.data === "OK") {
+              window.location.reload();
+            }
+          })
+        } else {
+          alert("没有新的标题或图片")
+        }
+      },
+      uploadImg(e) {
+        let logo = e.target.files[0]
+        let Img = new FormData();
+        Img.append("logo", logo);
+        axios({
+          url: "http://localhost:8000/upload-logo/",
+          method: "post",
+          data: Img,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        }).then(res => {
+          if (res.data) {
+            this.testLogo = "http://localhost:8000/" + res.data.img
+          }
+        })
       },
       hideSelf() {
         this.$emit("hideBox")

@@ -24,11 +24,12 @@ urlpatterns = [
     path('index/', views.index),  # 当访问index/时会去views.py中寻找index这个函数
     path('', views.index),  # 首页路由
     path('classes/', views.classes),
-    # api接口1
+    # api接口
     path('api/', api.api_test),
     path("get-menu-list/",api.getMenuList),
     path("get-user-list/",api.getUserList),
     path("login/",api.toLogin),
     path("register/",api.toRegister),
+    path("upload-logo/",api.uploadLogo)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
     + static(settings.MEDID_URL, document_root=settings.MEDID_ROOT)
