@@ -63,8 +63,6 @@
       if (window.localStorage.getItem("token").length > 0) {
         this.loginType = true;
       }
-      // console.log(window.localStorage.getItem("token"));
-      // console.log([1, 2, 3].length);
       this.getMenuList()
     },
     methods: {
