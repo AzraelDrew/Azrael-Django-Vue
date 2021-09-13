@@ -60,8 +60,12 @@
       LoginBox
     },
     mounted() {
-      if (window.localStorage.getItem("token").length > 0) {
-        this.loginType = true;
+      try {
+        if (window.localStorage.getItem("token").length > 0) {
+          this.loginType = true;
+        }
+      } catch (err) {
+        console.log(err);
       }
       this.getMenuList()
     },

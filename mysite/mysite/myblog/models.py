@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+# 数据及数据库
+# 更新后得创建迁移数据库
 
 
 class SiteInfo(models.Model):
@@ -12,9 +14,8 @@ class SiteInfo(models.Model):
     def __str__(self):
         return self.title
 
+
 # 课程分类
-
-
 class Classes(models.Model):
     text = models.CharField(null=True, blank=True, max_length=50)
 

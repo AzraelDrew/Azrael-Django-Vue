@@ -8,10 +8,10 @@ from myblog.toJson import Classes_data, UserInfo_data
 import json
 
 
+# api接口
 @api_view(['GET', 'POST'])
 def api_test(request):
-    # if request.method == 'POST':
-    #     return Response("post")
+    # 获取所有分类
     classes = Classes.objects.all()
     # print(classes)
     # classes_data = Classes_data(classes, many=True)  # many=True  序列化多条数据
@@ -40,18 +40,20 @@ def api_test(request):
                 "nickName": user.nickName,
                 "headImg": str(user.headImg)
             }
-            data_item["userlist"].append(user_data)
+            data_item["userlist"].append(user_data)   #将user_data添加到data_item
         data['classes'].append(data_item)
-    # data = json.dumps(data)
     return Response(data)
 
+# 获取菜单列表
 @api_view(['GET', 'POST'])    
 def getMenuList(request):
+    # 获取所有分类
     allClasses = Classes.objects.all()
+    # 获取id=1网站信息
     siteinfo = SiteInfo.objects.get(id=1)
     siteinfo_data={
     "sitename":siteinfo.title,
-    "logo":"http://localhost:8000/"+str(siteinfo.logo)
+    "logo":"http://localhost:8000/"+str(siteinfo.logo) #强制转换为字符串
     }
     # 整理数据为json
     menu_data=[]
@@ -68,11 +70,12 @@ def getMenuList(request):
     }
     return Response(data)
 
+# 获取用户列表
 @api_view(["GET","POST"])   
 def getUserList(request):
     # allClasses
     menuId = request.GET["id"]
-    menu = Classes.objects.get(id =menuId)
+    menu = Classes.objects.get(id=menuId)
     print(menu)
     userlist = UserInfo.objects.filter(belong=menu)
     print(userlist)
@@ -122,6 +125,7 @@ def toLogin(request):
         return Response("none")
     return Response("esk")
 
+# 注册
 @api_view(["POST"])
 def toRegister(request):
     username = request.POST['username']
@@ -140,6 +144,7 @@ def toRegister(request):
         newUser.save()
     return Response("ok")
 
+# 上传logo
 @api_view(["POST","PUT"])
 def uploadLogo(request):
     if request.method == "PUT":

@@ -26,10 +26,15 @@ urlpatterns = [
     path('classes/', views.classes),
     # api接口
     path('api/', api.api_test),
+    # 菜单列表
     path("get-menu-list/",api.getMenuList),
+    # 用户列表
     path("get-user-list/",api.getUserList),
+    # 登录
     path("login/",api.toLogin),
+    # 注册
     path("register/",api.toRegister),
+    # 上传logo
     path("upload-logo/",api.uploadLogo)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
     + static(settings.MEDID_URL, document_root=settings.MEDID_ROOT)
