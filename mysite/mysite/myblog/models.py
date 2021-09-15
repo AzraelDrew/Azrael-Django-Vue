@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 # 数据及数据库
@@ -30,6 +31,6 @@ class UserInfo(models.Model):
         upload_to='upload/logo/', null=True, blank=True)
     belong = models.ForeignKey(
         Classes, on_delete=models.SET_NULL, related_name='userinfo_classes', null=True, blank=True)
-
+    belong_user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
         return self.nickName

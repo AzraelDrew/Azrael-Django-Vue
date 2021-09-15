@@ -3,7 +3,8 @@
     <div>
       <button v-if="loginType===false" @click=" showLoginRegisterbox(1)">登录</button>
       <button v-if="loginType===false" @click="showLoginRegisterbox(2)">注册</button>
-      <button v-if="loginType" @click="showLoginRegisterbox(3)">个人中心</button>
+      <button @click="toHome" v-if="loginType">返回首页</button>
+      <button @click="toUserInfo" v-if="loginType">个人中心</button>
       <button v-if="loginType===true" @click="showLoginRegisterbox(3)">修改</button>
       <div class="header">
         <h1>
@@ -31,7 +32,7 @@
           <p>
             {{choosed_text}}
           </p>
-          <router-view />
+          <router-view @hideBox="hideLoginRegisterbox" @changUI="changeLoginType" />
         </div>
       </div>
     </div>
@@ -97,6 +98,19 @@
       // 隐藏登录注册框体
       hideLoginRegisterbox() {
         this.boxtarget = 0;
+      },
+      changeLoginType(value) {
+        this.loginType = value
+      },
+      toUserInfo() {
+        this.$router.push({
+          path: "/userinfo"
+        })
+      },
+      toHome() {
+        this.$router.push({
+          path: "/"
+        })
       }
 
     }

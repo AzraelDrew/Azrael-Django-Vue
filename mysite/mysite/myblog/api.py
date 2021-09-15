@@ -71,8 +71,14 @@ def getMenuList(request):
     return Response(data)
 
 # 获取用户列表
-@api_view(["GET","POST"])   
+@api_view(["GET","POST","DELETE"])   
 def getUserList(request):
+    if request.method == "DELETE":
+        user_id = request.POST["id"]
+        print(user_id)
+        deleteUser = UserInfo.objects.get(id=user_id)
+        deleteUser.delete()
+        return Response("OK")
     # allClasses
     menuId = request.GET["id"]
     menu = Classes.objects.get(id=menuId)
@@ -115,8 +121,16 @@ def toLogin(request):
             # 获取token
             token = Token.objects.get(user = user[0])
             print(token.key)
+
+            # 获取用户信息
+            userinfo = UserInfo.objects.get(belong_user=user[0])
             data={
-            'token':token.key
+            'token':token.key,
+            "userinfo":{
+                "id":userinfo.id,
+                "nickName":userinfo.nickName,
+                "headImg":str(userinfo.headImg)
+                }
             }
             return Response(data)
         else:

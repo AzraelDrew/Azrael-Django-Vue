@@ -1,7 +1,7 @@
 <template>
   <div id="login" @click.self="hideSelf">
     <!-- .self只对自身启用,不会影响子节点(子节点的事件不会冒泡到当前标签)  -->
-    <div v-on:keydown.enter="toLogin" id="loginbox">
+    <div id="loginbox">
       <div class="from">
         <div v-if="target===1||target===2" class="item">
           <div class="span">
@@ -96,7 +96,19 @@
                 console.log(res.data.token);
                 window.localStorage.setItem("token", res.data.token);
                 alert("登录成功")
-                window.location.reload();
+
+                // 开始u存储VueX中的用户信息
+                let userinfo = res.data.userinfo;
+                console.log(userinfo);
+                // 第一个参数为mutations中的方法 第二个参数为mutations当前方法的第二个参数
+                this.$store.commit("editUserInfo", userinfo);
+
+                if (this.$route.path != "/userinfo") {
+                  this.$router.push({
+                    path: "/userinfo"
+                  })
+                }
+                // window.location.reload();
             }
           })
         } else {
